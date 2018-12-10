@@ -1,0 +1,212 @@
+var TWS = /* color: #98ff00 */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[92.13288330078126, 21.08544380511384],
+                  [92.18712829589845, 21.011107387299173],
+                  [92.21665405273438, 20.925831238755894],
+                  [92.24137329101563, 20.894401461012684],
+                  [92.27707885742188, 20.867456411595143],
+                  [92.29355834960938, 20.863606724296037],
+                  [92.30454467773438, 20.879646437474914],
+                  [92.30385803222657, 20.893118473053857],
+                  [92.27982543945313, 20.916851974474742],
+                  [92.26815246582032, 20.929679330176345],
+                  [92.26471923828126, 20.955971975397222],
+                  [92.25373291015626, 20.96751362880835],
+                  [92.24686645507813, 20.990594262581034],
+                  [92.24686645507813, 21.013671329625716],
+                  [92.23588012695313, 21.023926658157198],
+                  [92.22901367187501, 21.041871785431166],
+                  [92.22970031738282, 21.067503930863076],
+                  [92.21390747070313, 21.088647126247466],
+                  [92.21390747070313, 21.108506175439235],
+                  [92.18712829589845, 21.119395493914443],
+                  [92.17270874023438, 21.12259808253686],
+                  [92.15760253906251, 21.107865602408346],
+                  [92.1349432373047, 21.09697543795441]]]),
+            {
+              "system:index": "0"
+            })]),
+    Boundary = ee.FeatureCollection("users/sbk1/TWS_Boundary_Shape"),
+    geometry = /* color: #98ff00 */ee.Geometry.Point([92.22146057128907, 20.980336643273464]);
+    
+    // This function gets NDVI from Landsat 5 imagery.
+var getNDVI = function(image) {
+  return image.normalizedDifference(['B4', 'B3']);
+};
+
+//This function gets NDVI from Landsat 8 imagery
+var getNDVI2 = function(image) {
+  return image.normalizedDifference(['B5', 'B4']);
+};
+
+
+//get landsat TM (5) images for teknaf 90's (1996 selected)
+//use below code to filter collection and choose image
+//var image3 = ee.ImageCollection('LANDSAT/LT05/C01/T1_SR')
+ // .filterBounds(geometry)
+ // .filterDate('1995-10-01', '1998-03-30')
+//  .sort("CLOUD_COVER")
+//select most cloud free image
+//   .first();
+//print(image3)
+//Map.addLayer(image3, {bands: ['B4', 'B3', 'B2']});
+   
+   
+//select image to use, run below code  
+var ls_1996 = ee.Image('LANDSAT/LT05/C01/T1_SR/LT05_135046_19960110')
+  //.filterBounds(geometry); filter bounds not needed with indivudual image
+// print image to console to check details of image used 
+print("Landsat 5 scene:", ls_1996);
+//bands red, green, blue (RGB) spatial resolution of Sentinel 2 is 10m
+//Map.addLayer(ls_1996, {bands: ['B4', 'B3', 'B2'], min: -1, max: 1}, '1996');
+// cloud free image code -  LANDSAT/LT05/C01/T1_TOA/LT05_135046_19960110
+// unsure why previous script (sort) not working
+  //print('Landsat5 Teknaf 90s', image3);
+  //Map.addLayer(image3);
+  
+//get landsat TM (8) corresponding to sentinel before date
+//use below code to filter collection to get cloud free image
+//var image4 = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+//.filterBounds(geometry)
+//.filterDate('2016-10-01', '2017-03-01')
+//.sort("CLOUD_COVER")
+//select most cloud free image
+  //.first();
+var ls_2017 = ee.Image('LANDSAT/LC08/C01/T1_SR/LC08_136045_20170110')
+  //.filterBounds(geometry)
+// print image to console to check details of image used 
+print("Landsat 8 scene 2017:", ls_2017);
+//bands red, green, blue (RGB) spatial resolution of Sentinel 2 is 10m
+//Map.addLayer(ls_2017, {bands: ['B4', 'B3', 'B2'], min: -1, max: 1}, '2017');
+// cloud free image code - LANDSAT/LC08/C01/T1_RT/LC08_136046_20170110 
+// unsure why previous script (sort) not working
+  //print('Landsat8 Teknaf 2016-17', image4);
+  //Map.addLayer(image4);
+  
+//get landsat TM (8) for sentinel after date
+//use following code to select cloud free image from collection
+// var ls_new = ee.ImageCollection('LANDSAT/LC08/C01/T1_TOA')
+//   .filterBounds(geometry)
+//   .filterDate('2017-10-01', '2018-03-30')
+//   .sort("CLOUD_COVER")
+// //select most cloud free image
+// print (ls_new, 'new ls TOA')
+//   // .first();
+var ls_2018 = ee.Image('LANDSAT/LC08/C01/T1_SR/LC08_135046_20180122')   
+  //.filterBounds(geometry)   
+// print image to console to check details of image used 
+print("Landsat 8 scene 2018:", ls_2018);
+//bands red, green, blue (RGB) spatial resolution of Sentinel 2 is 10m
+//Map.addLayer(ls_2018, {bands: ['B4', 'B3', 'B2'], min: -1, max: 1}, '2018');
+// cloud free image code - LANDSAT/LC08/C01/T1_RT/LC08_136045_20180113 
+// unsure why previous script (sort) not working
+  //print('Landsat8 Teknaf 20017-18', image5);
+  //Map.addLayer(image5);
+  
+
+// Load two Landsat 8 images, 1 years apart.
+//var image1 = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_136045_20170110');
+//var image2 = ee.Image('LANDSAT/LC08/C01/T1_RT/LC08_136045_20180113');
+
+// Compute NDVI from the scenes.
+var ndvi1 = getNDVI2(ls_2018);
+var ndvi2 = getNDVI2(ls_2017);
+
+// Compute the difference in NDVI.
+var ndviDifference_17_18 = ndvi1.subtract(ndvi2);
+// Load the land mask from the SRTM DEM.
+// land mask may not work in this case
+
+var landMask = ee.Image('CGIAR/SRTM90_V4').mask();
+
+// Update the NDVI difference mask with the land mask.
+var maskedDifference = ndviDifference_17_18.updateMask(landMask);
+
+// Display the masked result.
+//var vizParams = {min: -0.5, max: 0.5, palette: ['red', 'FFFFFF', '7EB3F7']};
+//Map.setCenter(92.24, 20.93);
+//Map.addLayer(maskedDifference, vizParams, 'NDVI difference 2017-18');
+
+
+// Load two Landsat images, 20 years apart 1996-2017
+//var image11 = ee.Image('LANDSAT/LT05/C01/T1_TOA/LT05_135046_19960110');
+//var image22 = ee.Image('LANDSAT/LC08/C01/T1_TOA/LC08_136045_20170110');
+
+// Compute NDVI from the scenes.
+var ndvi11 = getNDVI(ls_1996);
+var ndvi22 = getNDVI2(ls_2017);
+
+// Compute the difference in NDVI.
+var ndviDifference2 = ndvi22.subtract(ndvi11);
+// Load the land mask from the SRTM DEM.
+// land mask may not work in this case
+
+var landMask = ee.Image('CGIAR/SRTM90_V4').mask();
+
+// Update the NDVI difference mask with the land mask.
+var maskedDifference2 = ndviDifference2.updateMask(landMask);
+
+// Display the masked result.
+var vizParams = {min: -1, max: 1, palette: ['red', 'FFFFFF', '7EB3F7']};
+Map.setCenter(92.24, 20.93);
+//Map.addLayer(maskedDifference2, vizParams, 'NDVI difference 1996-2017');
+
+// Clip the image to the polygon geometry
+var maskedDifference2_Boundary = maskedDifference2.clip(Boundary);
+var maskedDifference_Boundary = maskedDifference.clip(Boundary);
+var ndvi11_Boundary = ndvi11.clip(Boundary);
+var ndvi1_Boundary = ndvi1.clip(Boundary);
+var ndvi2_Boundary = ndvi2.clip(Boundary);
+
+// Add a map layer of the landcover clipped to the polygon.
+Map.addLayer(maskedDifference2_Boundary, vizParams, 'NDVI diff 2017-1996');
+Map.addLayer(maskedDifference_Boundary, vizParams, 'NDVI diff 2018-2017')
+Map.addLayer(ndvi1_Boundary, vizParams, 'NDVI 2018 clip');
+Map.addLayer(ndvi2_Boundary, vizParams, 'NDVI 2017 clip');
+Map.addLayer(ndvi11_Boundary, vizParams, 'NDVI 1996 clip');
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: ndvi1_Boundary,
+//   description: 'NDVI_2018_clip',
+//   region: TWS,
+//   scale: 30
+ 
+// });
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: ndvi2_Boundary,
+//   description: 'NDVI_2017_clip',
+//   region: TWS,
+//   scale: 30
+ 
+// });
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: ndvi11_Boundary,
+//   description: 'NDVI_1996_clip',
+//   region: TWS,
+//   scale: 30
+ 
+// });
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: maskedDifference2_Boundary,
+//   description: 'NDVI_diff_2017_1996',
+//   region: TWS,
+//   scale: 30
+ 
+// });
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: maskedDifference_Boundary,
+//   description: 'NDVI_diff_2018_2017',
+//   region: TWS,
+//   scale: 30
+ 
+// });
