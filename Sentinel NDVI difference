@@ -1,0 +1,184 @@
+var geometry = /* color: #0b4a8b */ee.Geometry.Point([92.24, 20.93]),
+    Boundary = ee.FeatureCollection("users/sbk1/TWS_Boundary_Shape"),
+    geometry2 = /* color: #d63000 */ee.Feature(
+        ee.Geometry.Polygon(
+            [[[92.13288330078126, 21.08544380511384],
+              [92.18712829589845, 21.011107387299173],
+              [92.21665405273438, 20.925831238755894],
+              [92.24137329101563, 20.894401461012684],
+              [92.27707885742188, 20.867456411595143],
+              [92.29355834960938, 20.863606724296037],
+              [92.30454467773438, 20.879646437474914],
+              [92.30385803222657, 20.893118473053857],
+              [92.27982543945313, 20.916851974474742],
+              [92.26815246582032, 20.929679330176345],
+              [92.26471923828126, 20.955971975397222],
+              [92.25373291015626, 20.96751362880835],
+              [92.24686645507813, 20.990594262581034],
+              [92.24686645507813, 21.013671329625716],
+              [92.23588012695313, 21.023926658157198],
+              [92.22901367187501, 21.041871785431166],
+              [92.22970031738282, 21.067503930863076],
+              [92.21390747070313, 21.088647126247466],
+              [92.21390747070313, 21.108506175439235],
+              [92.18712829589845, 21.119395493914443],
+              [92.17270874023438, 21.12259808253686],
+              [92.15760253906251, 21.107865602408346],
+              [92.1349432373047, 21.09697543795441]]]),
+        {
+          "system:index": "0"
+        }),
+    TWS = /* color: #98ff00 */ee.FeatureCollection(
+        [ee.Feature(
+            ee.Geometry.Polygon(
+                [[[92.13288330078126, 21.08544380511384],
+                  [92.18712829589845, 21.011107387299173],
+                  [92.21665405273438, 20.925831238755894],
+                  [92.24137329101563, 20.894401461012684],
+                  [92.27707885742188, 20.867456411595143],
+                  [92.29355834960938, 20.863606724296037],
+                  [92.30454467773438, 20.879646437474914],
+                  [92.30385803222657, 20.893118473053857],
+                  [92.27982543945313, 20.916851974474742],
+                  [92.26815246582032, 20.929679330176345],
+                  [92.26471923828126, 20.955971975397222],
+                  [92.25373291015626, 20.96751362880835],
+                  [92.24686645507813, 20.990594262581034],
+                  [92.24686645507813, 21.013671329625716],
+                  [92.23588012695313, 21.023926658157198],
+                  [92.22901367187501, 21.041871785431166],
+                  [92.22970031738282, 21.067503930863076],
+                  [92.21390747070313, 21.088647126247466],
+                  [92.21390747070313, 21.108506175439235],
+                  [92.18712829589845, 21.119395493914443],
+                  [92.17270874023438, 21.12259808253686],
+                  [92.15760253906251, 21.107865602408346],
+                  [92.1349432373047, 21.09697543795441]]]),
+            {
+              "system:index": "0"
+            })]);
+            
+            // var Boundary = Boundary2, geometry = geometry3;
+// This function gets NDVI from Sentinel 2 imagery.
+var getNDVI = function(image) {
+  return image.normalizedDifference(['B8', 'B4']);
+};
+
+//get sentinel images for teknaf 2018
+//first find image with the below code
+//then use image code from there
+
+//var image1 = ee.Image(ee.ImageCollection('COPERNICUS/S2')
+  //.filterBounds(geometry)
+//filter by date
+//.filterDate('2017-10-01', '2018-03-31')
+//.sort("CLOUD_COVERAGE_ASSESSMENT")
+//.first());
+
+var Sent_2018 = ee.Image('COPERNICUS/S2/20180119T042109_20180119T042848_T46QDJ');
+//select most cloud free image with best date and use below code
+//COPERNICUS/S2/20180119T042109_20180119T042848_T46QDJ
+// print image to console to check details of image used 
+print("A Sentinel-2: 2018:", Sent_2018);
+//bands red, green, blue (RGB) spatial resolution of Sentinel 2 is 10m
+//Map.addLayer(Sent_2018, {bands: ['B4', 'B3', 'B2'], max: 3000}, '2018');
+
+//define false-colour visualisation parameters
+var falseColour = {
+  bands: ["B8", "B4", "B3"],
+  min: 0,
+  max: 3000
+};
+
+// add image to map using vis parameters
+//Map.addLayer(Sent_2018, falseColour, "false-colour composite 2018");
+
+//get sentinel 2 image for teknaf before date (2017)
+var Sent_2017 = ee.Image('COPERNICUS/S2/20170109T042131_20170109T042934_T46QDJ')
+  //.filterBounds(geometry)
+  //.filterDate('2016-10-01', '2017-03-01')
+  //.sort("CLOUD_COVERAGE_ASSESSMENT")
+  //.first());
+//select most cloud free image
+//COPERNICUS/S2/20170109T042131_20170109T042934_T46QDJ
+// print image to console to check details of image used 
+print("A Sentinel-2: 2017:", Sent_2017);
+//bands red, green, blue (RGB) spatial resolution of Sentinel 2 is 10m
+//Map.addLayer(Sent_2017, {bands: ['B4', 'B3', 'B2'], max: 3000}, '2017');
+
+// add image to map using vis parameters
+//Map.addLayer(Sent_2017, falseColour, "false-colour composite 2017");
+
+// Load two Landsat 5 images, 1 years apart.
+//var image2 = ee.Image('COPERNICUS/S2/20170109T042131_20170109T042934_T46QDJ');
+//var image1 = ee.Image('COPERNICUS/S2/20180119T042109_20180119T042848_T46QDJ');
+
+// Compute NDVI from the scenes.
+var ndvi1 = getNDVI(Sent_2018);
+var ndvi2 = getNDVI(Sent_2017);
+
+//Map.addLayer(ndvi1, vizParams, 'NDVI 2018 Clip' )
+//Map.addLayer(ndvi2, vizParams, 'NDVI 2017 Clip' )
+
+// Compute the difference in NDVI.
+var ndviDifference = ndvi1.subtract(ndvi2);
+// Load the land mask from the SRTM DEM.
+// land mask may not work in this case
+
+var landMask = ee.Image('CGIAR/SRTM90_V4').mask();
+
+// Update the NDVI difference mask with the land mask.
+var maskedDifference = ndviDifference.updateMask(landMask);
+// Upadte NDVI 2018 with boundary mask
+var maskedDifference_ndvi_2018 = ndvi1.updateMask(landMask);
+//Update NDVI 2017 with boundary mask
+var maskedDifference_ndvi_2017 = ndvi2.updateMask(landMask);
+// Add new layers clipped to the polygon.
+//Map.addLayer(maskedDifference_ndvi_2018, vizParams, 'NDVI diff 2018 clip');
+//Map.addLayer(maskedDifference_ndvi_2017, vizParams, 'NDVI diff 2017 clip');
+
+// Display the masked result.
+var vizParams = {min: -0.5, max: 0.5, palette: ['red', 'FFFFFF', '7EB3F7']};
+Map.setCenter(92.24, 20.93);
+//Map.addLayer(maskedDifference, vizParams, 'NDVI difference 2017-18');
+
+// Clip the image to the polygon geometry
+var maskedDifference_Boundary = maskedDifference.clip(Boundary);
+var maskedDifference_ndvi_2018_Boundary = maskedDifference_ndvi_2018.clip(Boundary);
+var maskedDifference_ndvi_2017_Boundary = maskedDifference_ndvi_2017.clip(Boundary);
+var Sent_2018_fcc_boundary = Sent_2018.clip(Boundary);
+var Sent_2017_fcc_boundary = Sent_2017.clip(Boundary);
+// Add a map layer of the landcover clipped to the polygon.
+Map.addLayer(maskedDifference_Boundary, vizParams, '2017-18');
+Map.addLayer(maskedDifference_ndvi_2018_Boundary, vizParams, 'NDVI 2018 clip');
+Map.addLayer(maskedDifference_ndvi_2017_Boundary, vizParams, 'NDVI 2017 clip');
+Map.addLayer(Sent_2018_fcc_boundary, falseColour, 'FCC 2018 clip');
+Map.addLayer(Sent_2017_fcc_boundary, falseColour, 'FCC 2017 clip');
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: maskedDifference_ndvi_2017_Boundary,
+//   description: 'NDVI_2017_clip_sentinel',
+//   region: TWS,
+//   scale: 10
+ 
+// });
+
+// // Create a task that you can launch from the Tasks tab.
+// Export.image.toDrive({
+//   image: maskedDifference_ndvi_2018_Boundary,
+//   description: 'NDVI_2018_clip_sentinel',
+//   region: TWS,
+//   scale: 10
+ 
+// });
+
+// Create a task that you can launch from the Tasks tab.
+Export.image.toDrive({
+  image: maskedDifference_Boundary,
+  description: '2017_18_sentinel',
+  region: TWS,
+  scale: 10
+  
+});
+ 
