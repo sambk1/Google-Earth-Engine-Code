@@ -1,0 +1,68 @@
+var table = ee.FeatureCollection("users/sbk1/TWS"),
+    Boundary = ee.FeatureCollection("users/sbk1/TWS_Boundary_Shape"),
+    table2 = ee.FeatureCollection("users/sbk1/LandUseTWS");
+    
+    
+Map.addLayer(Boundary, {}, 'TWS Boundary');
+//add table to map
+print(Boundary)
+//Map.addLayer(table,{}, 'LCC');
+//print table to console
+print(table2)
+
+//visualise chosen classes
+var classes = (table2)
+            .filter(ee.Filter.eq("Class_name", "Settlements"));
+Map.addLayer(classes, {color:'blue'}, 'Settlements');
+
+var classes2 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Degraded_Forest"));
+Map.addLayer(classes2, {color:'olive'}, 'Degraded_Forest');
+
+var classes3 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Refugee Camp"));
+Map.addLayer(classes3, {color:'red'}, 'Refugee Camp');
+
+var classes4 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Low_MidCanopyForest"));
+Map.addLayer(classes4, {color:'green'}, 'Low_MidCanopyForest');
+
+var classes5 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Mid_HighCanopyForest"));
+Map.addLayer(classes5, {color:'pink'}, 'Mid_HighCanopyForest');
+
+var classes6 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Settlements"));
+Map.addLayer(classes6, {color:'black'}, 'Settlements');
+
+var classes7 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Water Bodies"));
+Map.addLayer(classes7, {color:'aqua'}, 'Water Bodies');
+
+var classes8 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Agriculture"));
+Map.addLayer(classes8, {color:'#FFFF00'}, 'Agriculture');
+
+var classes9 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Plantation"));
+Map.addLayer(classes9, {color:'#81F7BE'}, 'Plantation');
+
+var classes10 = (table2)
+            .filter(ee.Filter.eq("Class_name", "Dry/Bare Soil"));
+Map.addLayer(classes10, {color:'#5F4C0B'}, 'Dry/Bare Soil');
+
+
+// // Clip the feature to the polygon geometry
+// var classes_clip = classes.clip(Boundary);
+// var classes_clip2 = classes2.clip(Boundary);
+// var classes_clip3 = classes3.clip(Boundary);
+// var classes_clip4 = classes4.clip(Boundary);
+// var classes_clip5 = classes5.clip(Boundary);
+
+
+// // Add a map layer of the landcover clipped to the polygon.
+// Map.addLayer(classes_clip, blue, 'Settlements');
+// Map.addLayer(classes_clip2, olive, 'Degraded Forest');
+// Map.addLayer(classes_clip3, red, 'Refugee Camp');
+// Map.addLayer(classes_clip4, green, 'Low_MidCanopyForest');
+// Map.addLayer(classes_clip5, pink, 'Mid_HighCanopyForest');
