@@ -1,0 +1,56 @@
+var geometry = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[91.86924593965296, 21.444337452478774],
+          [92.28672456847096, 20.706243732174837],
+          [92.44327906793683, 20.77816304604674],
+          [92.03678669917736, 21.536339985054195]]]),
+    geometry2 = /* color: #00ffff */ee.Geometry.Polygon(
+        [[[91.93190138132331, 21.305444048189027],
+          [92.30543653757331, 20.682332794566687],
+          [92.45100538522956, 20.759400387761115],
+          [92.09120313913581, 21.377074965476442]]]),
+    geometry3 = /* color: #d63000 */ee.Geometry.Point([92.24, 20.93]),
+    srtm = ee.Image("USGS/SRTMGL1_003");
+    
+    
+print(srtm);
+Map.addLayer(srtm);
+Map.addLayer(srtm, {min: 0, max: 500});
+var slope = ee.Terrain.slope(srtm);
+Map.addLayer(srtm, {min: 0, max: 500}, 'DEM');
+Map.addLayer(slope, {min: 0, max: 60}, 'slope');
+
+//apply spatial reducer
+var dict = srtm.reduceRegion({
+  reducer: 'mean',
+  geometry: geometry2,
+  scale: 90});
+ 
+//mean elevation for region 
+print('Mean elevation', dict);
+
+
+
+
+
+
+
+
+// Instantiate an image with the Image constructor.
+//var image = ee.Image('USGS/SRTMGL1_003')
+
+// Zoom to a location.
+//Map.setCenter(92.24, 20.93, 9); // Center on Teknaf.
+
+// Display the image on the map.
+//Map.addLayer(image);
+//print('SRTM image', image);
+//Map.addLayer(image, {min: 0, max: 300}, 'custom visualization');
+//Map.addLayer(image, {min: 0, max: 300, palette: ['blue', 'green', 'red']},
+   // 'custom palette');
+    
+// 
+//var point = geometry3;
+//var filteredCollection = ee.ImageCollection('USGS/SRTMGL1_003')
+  //.filterBounds(point)
+
+   
