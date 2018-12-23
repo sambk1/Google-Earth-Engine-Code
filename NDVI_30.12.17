@@ -1,0 +1,56 @@
+var geometry = /* color: #d63000 */ee.Geometry.Polygon(
+        [[[91.86924593965296, 21.444337452478774],
+          [92.28672456847096, 20.706243732174837],
+          [92.44327906793683, 20.77816304604674],
+          [92.03678669917736, 21.536339985054195]]]),
+    geometry2 = /* color: #00ffff */ee.Geometry.Polygon(
+        [[[91.93190138132331, 21.305444048189027],
+          [92.30543653757331, 20.682332794566687],
+          [92.45100538522956, 20.759400387761115],
+          [92.09120313913581, 21.377074965476442]]]),
+    teknaf = /* color: #d63000 */ee.Geometry.Point([92.24363844187019, 20.930093364739836]);
+    
+    // Load a sentinel image, first image 30.12.2017 post
+var image = ee.Image('COPERNICUS/S2/20171230T042149_20171230T042930_T46QDJ')
+
+// Load second sentinel image, image 11.20.2016 pre
+//var image2 = ee.Image('COPERNICUS/S2/20161120T042052_20161120T094829_T46QCJ')
+
+//Above image is not in the correct 
+//filter image collection at region of interest (roi) for specified date range sorting by least cloud cover first 
+var image2 = ee.Image(ee.ImageCollection('COPERNICUS/S2')
+.filterBounds(teknaf)
+//filter by date range
+.filterDate('2016-11-20', '2017-02-28')
+//sort by cloud coverage 
+.sort("CLOUD_COVERAGE_ASSESSMENT")
+//select most cloud free image
+.first());
+// print image to console to check details of image used 
+print("A Sentinel-2 scene:", image2);
+
+// Visualization parameters 
+var visParams = {bands: ['B8', 'B4', 'B3'], max: 3048, gamma: 1};
+var visParams_ndvi = {min: -1, max: 1, palette: ['blue', 'white', 'green']};
+
+// Calculate NDVI
+var ndvi = image.normalizedDifference(['B8','B4']);
+// Calculate NDVI
+var ndvi2 = image2.normalizedDifference(['B8','B4']);
+
+// Display the result.
+Map.centerObject(image, 9);
+Map.addLayer(image,visParams,'Sentinel-2 Post')
+Map.addLayer(ndvi, visParams_ndvi, 'NDVI image Post')
+Map.addLayer(ndvi2, visParams_ndvi, 'NDVI image Pre');
+
+var ndvi_vis = ndvi.visualize(visParams_ndvi);
+var ndvi_vis2 = ndvi2.visualize(visParams_ndvi);
+
+// Export the image, specifying scale and region.
+Export.image.toDrive({
+  image: ndvi_vis2, 
+  description: 'NDVI_30_12_17',
+  scale: 10,
+  region: geometry2
+});
